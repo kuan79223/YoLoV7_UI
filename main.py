@@ -620,6 +620,7 @@ def yolo_task():
     opt.project = gl.PROJECT_FOLDER
     save_run_dir = os.path.join(gl.PROJECT_FOLDER, 'runs/train')
     opt.weights = gl.TRAIN_WEIGHTS
+    opt.cfg = gl.CFG
     opt.data = gl.DATA
     opt.img_size = gl.TRAIN_IMG_SIZE
     opt.batch_size = gl.TRAIN_BATCH_SIZE
@@ -889,7 +890,17 @@ def io_convert():
         file.write(data)
 
     print('將數據寫入yaml')
-    del cls_list, cls_path, train_img_dir, val_img_dir, train_data
+    gl.CFG = r'D:\PythonCase\yolov7\cfg\training\yolov7_test.yaml'
+    target_paragraph_index = 1  # 指定修改文字的索引行
+    with open(gl.CFG, 'r') as file:
+        lines = file.readlines()
+    print(lines)
+    # 判斷內容行數一定要大於指定修改的索引行
+    if target_paragraph_index < len(lines):
+        lines[target_paragraph_index] = 'nc: ' + str(len(cls_list)) + '\n'
+
+    with open(gl.CFG, 'w') as file:
+        file.writelines(lines)
 
 
 '''訓練的執行緒'''
